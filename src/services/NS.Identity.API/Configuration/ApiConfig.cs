@@ -25,9 +25,7 @@ public static class ApiConfig
         app.UseHttpsRedirection();
         app.UseRouting();
 
-        app.UseIdentityConfiguration();
-
-        app.MapControllers();
+        app.UseIdentityConfiguration();        
 
         return app;
     }
