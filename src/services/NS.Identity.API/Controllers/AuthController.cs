@@ -10,17 +10,16 @@ using System.Text;
 
 namespace NS.Identity.API.Controllers
 {
-    [ApiController]
     [Route("api/identity")]
-    public class AuthController : ControllerBase
+    public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
         public AuthController(
-            SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager,
+            UserManager<IdentityUser> userManager,
             IOptions<AppSettings> appSettings)
         {
             _signInManager = signInManager;
@@ -33,7 +32,7 @@ namespace NS.Identity.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Register(UserRegister newUser)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser
             {
@@ -43,12 +42,12 @@ namespace NS.Identity.API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, newUser.Password);
+            if (result.Succeeded)
+                return CustomResponse(await GenerateJWT(newUser.Email));
 
-            if (!result.Succeeded)
-                return BadRequest();
+            AddProcessingErrors(result.Errors.Select(e => e.Description));
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            return Ok(await GenerateJWT(newUser.Email));
+            return CustomResponse();
         }
 
         [HttpPost("login")]
@@ -56,17 +55,20 @@ namespace NS.Identity.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Login(UserLogin login)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, isPersistent: false, lockoutOnFailure: true);
+            if (result.Succeeded)
+                return CustomResponse(await GenerateJWT(login.Email));
 
             if (result.IsLockedOut)
-                return BadRequest("User blocked");
+            {
+                AddProcessingError("user temporarily blocked for invalid attempts");
+                return CustomResponse();
+            }
 
-            if (!result.Succeeded)
-                return BadRequest("User or password invalid");
-
-            return Ok(await GenerateJWT(login.Email));
+            AddProcessingError("User or Password invalid");
+            return CustomResponse();
         }
 
         private async Task<UserLoginResponse> GenerateJWT(string email)
