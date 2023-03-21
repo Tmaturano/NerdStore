@@ -4,6 +4,7 @@ using NS.Identity.API.Models;
 
 namespace NS.Identity.API.Controllers
 {
+    [ApiController]
     [Route("api/identity")]
     public class AuthController : ControllerBase
     {
