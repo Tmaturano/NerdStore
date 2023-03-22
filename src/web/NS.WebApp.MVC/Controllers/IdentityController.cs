@@ -1,10 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NS.WebApp.MVC.Models;
+using NS.WebApp.MVC.Services;
 
 namespace NS.WebApp.MVC.Controllers;
 
 public class IdentityController : Controller
 {
+    private readonly IAuthenticationService _authenticationService;
+
+    public IdentityController(IAuthenticationService authenticationService)
+    {
+        _authenticationService = authenticationService;
+    }
+
     [HttpGet("new-account")]
     public IActionResult Register()
     {
@@ -16,6 +24,7 @@ public class IdentityController : Controller
     {
         if (!ModelState.IsValid) return View(newUser);
 
+        var response = await _authenticationService.RegisterAsync(newUser);
 
         if (false) return View(newUser);
 
@@ -33,6 +42,7 @@ public class IdentityController : Controller
     {
         if (!ModelState.IsValid) return View(login);
 
+        var response = await _authenticationService.LoginAsync(login);
 
         if (false) return View(login);
 
