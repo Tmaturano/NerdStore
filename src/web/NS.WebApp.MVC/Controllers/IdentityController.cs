@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using NS.WebApp.MVC.Models;
-using NS.WebApp.MVC.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using IAuthenticationService = NS.WebApp.MVC.Services.IAuthenticationService;
 
 namespace NS.WebApp.MVC.Controllers;
 
@@ -26,7 +30,8 @@ public class IdentityController : Controller
 
         var response = await _authenticationService.RegisterAsync(newUser);
 
-        if (false) return View(newUser);
+        //if (false) return View(newUser);
+        await DoLoginAsync(response);
 
         return RedirectToAction("Index", controllerName: "Home");
     }
@@ -44,7 +49,8 @@ public class IdentityController : Controller
 
         var response = await _authenticationService.LoginAsync(login);
 
-        if (false) return View(login);
+        //if (false) return View(login);
+        await DoLoginAsync(response);
 
         return RedirectToAction("Index", controllerName: "Home");
     }
@@ -54,4 +60,26 @@ public class IdentityController : Controller
     {
         return RedirectToAction("Index", controllerName: "Home");
     }
+
+    private async Task DoLoginAsync(UserLoginResponse response)
+    {
+        var token = GetFormattedToken(response.AccessToken);
+
+        var claims = new List<Claim>();
+        claims.Add(new Claim("JWT", response.AccessToken));
+        claims.AddRange(token.Claims);
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var authProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
+            IsPersistent = true
+        };
+        
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity), authProperties);
+    }
+
+    private static JwtSecurityToken GetFormattedToken(string jwtToken)
+        => new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
 }
