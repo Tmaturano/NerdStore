@@ -8,7 +8,7 @@ using IAuthenticationService = NS.WebApp.MVC.Services.IAuthenticationService;
 
 namespace NS.WebApp.MVC.Controllers;
 
-public class IdentityController : Controller
+public class IdentityController : MainController
 {
     private readonly IAuthenticationService _authenticationService;
 
@@ -30,7 +30,8 @@ public class IdentityController : Controller
 
         var response = await _authenticationService.RegisterAsync(newUser);
 
-        //if (false) return View(newUser);
+        if (ResponseHasErrors(response.ResponseResult)) return View(newUser);
+
         await DoLoginAsync(response);
 
         return RedirectToAction("Index", controllerName: "Home");
@@ -49,7 +50,8 @@ public class IdentityController : Controller
 
         var response = await _authenticationService.LoginAsync(login);
 
-        //if (false) return View(login);
+        if (ResponseHasErrors(response.ResponseResult)) return View(login);
+
         await DoLoginAsync(response);
 
         return RedirectToAction("Index", controllerName: "Home");
@@ -75,7 +77,7 @@ public class IdentityController : Controller
             ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
             IsPersistent = true
         };
-        
+
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(claimsIdentity), authProperties);
     }

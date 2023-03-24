@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace NS.WebApp.MVC.Services;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService : Service, IAuthenticationService
 {
     private readonly HttpClient _httpClient;
 
@@ -21,6 +21,14 @@ public class AuthenticationService : IAuthenticationService
             PropertyNameCaseInsensitive = true,
         };
 
+        if (!HandleErrorsResponse(response))
+        {
+            return new UserLoginResponse
+            {
+                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), serializeOptions)
+            };            
+        } 
+
         return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), serializeOptions);
     }
 
@@ -34,6 +42,14 @@ public class AuthenticationService : IAuthenticationService
         {
             PropertyNameCaseInsensitive = true,
         };
+
+        if (!HandleErrorsResponse(response))
+        {
+            return new UserLoginResponse
+            {
+                ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), serializeOptions)
+            };
+        }
 
         return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), serializeOptions);
     }
