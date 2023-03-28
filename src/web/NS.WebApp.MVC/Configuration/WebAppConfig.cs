@@ -1,4 +1,6 @@
-﻿namespace NS.WebApp.MVC.Configuration;
+﻿using NS.WebApp.MVC.Extensions;
+
+namespace NS.WebApp.MVC.Configuration;
 
 public static class WebAppConfig
 {
@@ -12,7 +14,8 @@ public static class WebAppConfig
         }
         else
         {
-            app.UseExceptionHandler("/Home/Error");
+            app.UseExceptionHandler("/error/500");
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHsts();
         }
 
@@ -22,6 +25,8 @@ public static class WebAppConfig
         app.UseRouting();
 
         app.UseIdentityConfiguration();
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.MapControllerRoute(
             name: "default",
