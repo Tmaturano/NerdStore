@@ -4,7 +4,19 @@ namespace NS.WebApp.MVC.Configuration;
 
 public static class WebAppConfig
 {
-    public static void AddMvcConfiguration(this WebApplicationBuilder app) => app.Services.AddControllersWithViews();
+    public static void AddMvcConfiguration(this WebApplicationBuilder app)
+    {
+        app.Configuration.SetBasePath(app.Environment.ContentRootPath)
+            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile($"appsettings.{app.Environment.EnvironmentName}.json", true, true)
+            .AddEnvironmentVariables();
+
+        if (app.Environment.IsDevelopment())
+            app.Configuration.AddUserSecrets<Program>();
+
+        app.Services.AddControllersWithViews();        
+        app.Services.Configure<AppSettings>(app.Configuration);
+    }
 
     public static void UseMvcConfiguration(this WebApplication app)
     {
