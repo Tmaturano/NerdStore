@@ -1,44 +1,59 @@
 ﻿@model NS.WebApp.MVC.Models.UserRegister
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Register new user";
 }
 
-<h1>@ViewData["TItle"]</h1>
-<div class="row">
-    <div class="col-md-12">
-        <section>
-            <form method="post">
-                <h4>Create a new account and start buying today</h4>
-                <hr />
+<section class="section-conten padding-y container" style="min-height: 35vh">
+    
+    <vc:Summary></vc:Summary>
 
-                <vc:summary></vc:summary>
+    <div class="card mx-auto" style="max-width: 380px; margin-top: 100px;">
+
+        <div class="card-body">
+            <h4 class="card-title mb-4">Welcome!</h4>
+
+            <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Cpf"></label>
+                    <input asp-for="Cpf" class="form-control" />
+                    <span asp-validation-for="Cpf" class="text-danger"></span>
+                </div>
 
                 <div class="form-group">
                     <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control"/>
+                    <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Password"></label>
-                    <input asp-for="Password" type="password" class="form-control" />
+                    <input type="password" asp-for="Password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="ConfirmPassword"></label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <input type="password" asp-for="ConfirmPassword" class="form-control" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary btn-block">Create account</button>
                 </div>
             </form>
-        </section>
+        </div>
+        <div class="card-footer text-center">Already have an account?<a asp-controller="Identity" asp-action="Login"> Login</a></div>
     </div>
-</div>
+
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
