@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NS.Catalog.API.Data;
+using NS.WebApi.Core.Identity;
 
 namespace NS.Catalog.API.Configuration;
 
@@ -27,7 +28,7 @@ public static class ApiConfig
                           .AllowAnyMethod()
                           .AllowAnyHeader());
         });
-        
+
         return builder;
     }
 
@@ -39,6 +40,8 @@ public static class ApiConfig
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseCors();
+
+        app.UseAuthConfiguration();
 
         return app;
     }
