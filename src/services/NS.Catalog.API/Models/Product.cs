@@ -1,8 +1,9 @@
-﻿namespace NS.WebApp.MVC.Models;
+﻿using NS.Core.DomainObjects;
 
-public class ProductViewModel
-{
-    public Guid Id { get; set; }
+namespace NS.Catalog.API.Models;
+
+public class Product : Entity
+{    
     public string Name { get; set; }
     public string Description { get; set; }
     public bool IsActive { get; set; }
@@ -10,5 +11,4 @@ public class ProductViewModel
     public DateTime CreatedOn { get; set; }
     public string Image { get; set; }
     public int StockQuantity { get; set; }
-
 }
