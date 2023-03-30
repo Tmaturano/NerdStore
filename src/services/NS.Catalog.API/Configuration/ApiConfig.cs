@@ -19,6 +19,14 @@ public static class ApiConfig
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddControllers();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("All",
+                policy => policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+        });
         
         return builder;
     }
@@ -30,6 +38,7 @@ public static class ApiConfig
 
         app.UseHttpsRedirection();
         app.UseRouting();
+        app.UseCors();
 
         return app;
     }
