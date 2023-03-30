@@ -10,8 +10,7 @@ public class UserRegister
     public string Name { get; set; }
 
     [Required]
-    [DisplayName("CPF")]
-    [Cpf]
+    [DisplayName("CPF")]    
     public string Cpf { get; set; }
 
     [Required]

@@ -1,22 +1,20 @@
+using NS.Catalog.API.Configuration;
+
+#region Configure Services
 var builder = WebApplication.CreateBuilder(args);
-
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddSwaggerConfiguration();
+builder.AddApiConfiguration();
+builder.Services.RegisterServices();
 
 var app = builder.Build();
+#endregion
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+#region Configure Pipeline
+app.UseSwaggerConfiguration();
+app.UseApiConfiguration();
 
 app.MapControllers();
 
 app.Run();
+
+#endregion
