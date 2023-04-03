@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using Polly.CircuitBreaker;
+using Refit;
 using System.Net;
 
 namespace NS.WebApp.MVC.Extensions;
@@ -27,6 +28,10 @@ public class ExceptionMiddleware
         {
             HandleRequestExceptionAsync(context, ex.StatusCode);
         }
+        catch (BrokenCircuitException)
+        {
+            HandleCircuitBreakerExceptionAsync(context);
+        }
     }
 
     private static void HandleRequestExceptionAsync(HttpContext context, HttpStatusCode statusCode)
@@ -39,4 +44,7 @@ public class ExceptionMiddleware
 
         context.Response.StatusCode = (int)statusCode;
     }
+
+    private static void HandleCircuitBreakerExceptionAsync(HttpContext context)
+        => context.Response.Redirect("/system-offline");
 }

@@ -3,6 +3,7 @@ using NS.WebApp.MVC.Services;
 using NS.WebApp.MVC.Services.Handlers;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.Retry;
 
 namespace NS.WebApp.MVC.Configuration;
 
@@ -14,25 +15,13 @@ public static class DependencyInjectionConfig
                 
         services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 
-
-        var retryWaitPolicy = HttpPolicyExtensions
-            .HandleTransientHttpError()
-            .WaitAndRetryAsync(new[]
-            {
-                TimeSpan.FromSeconds(1),
-                TimeSpan.FromSeconds(5),
-                TimeSpan.FromSeconds(10),
-            }, (outcome, timespan, retryCount, context) =>
-            {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"Retrying {retryCount} time(s)");
-                Console.ForegroundColor = ConsoleColor.White;
-            });
-
         services.AddHttpClient<ICatalogService, CatalogService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            .AddPolicyHandler(retryWaitPolicy);
-            //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
+            .AddPolicyHandler(PollyExtensions.WaitAndRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+        /*
+         Consecutive exceptions (5) for this case from every call will open the circuit and will need to wait 30 seconds before trying again
+        This create resilience in your API, so it may have time to recover for example, an out of memory, or the API is restarting*/
 
         //services.AddHttpClient("Refit", options =>
         //{
@@ -43,5 +32,27 @@ public static class DependencyInjectionConfig
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<IUser, AspNetUser>();
 
+    }
+
+    public class PollyExtensions
+    {
+        public static AsyncRetryPolicy<HttpResponseMessage> WaitAndRetry()
+        {
+            var retryWaitPolicy = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .WaitAndRetryAsync(new[]
+                {
+                            TimeSpan.FromSeconds(1),
+                            TimeSpan.FromSeconds(5),
+                            TimeSpan.FromSeconds(10),
+                }, (outcome, timespan, retryCount, context) =>
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine($"Retrying {retryCount} time(s)");
+                    Console.ForegroundColor = ConsoleColor.White;
+                });
+
+            return retryWaitPolicy;
+        }
     }
 }
