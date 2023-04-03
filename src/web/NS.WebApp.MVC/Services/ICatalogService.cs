@@ -1,4 +1,5 @@
 ﻿using NS.WebApp.MVC.Models;
+using Refit;
 
 namespace NS.WebApp.MVC.Services
 {
@@ -8,12 +9,12 @@ namespace NS.WebApp.MVC.Services
         Task<ProductViewModel> GetByIdAsync(Guid id);
     }
 
-    //public interface ICatalogServiceRefit
-    //{
-    //    [Get("/catalogo/produtos/")]
-    //    Task<IEnumerable<ProductViewModel>> GetAllAsync();
+    public interface ICatalogServiceRefit
+    {
+        [Get("/api/catalog/products/")]
+        Task<IEnumerable<ProductViewModel>> GetAllAsync();
 
-    //    [Get("/catalogo/produtos/{id}")]
-    //    Task<ProductViewModel> GetByIdAsync(Guid id);
-    //}
+        [Get("/api/catalog/products/{id}")]
+        Task<ProductViewModel> GetByIdAsync(Guid id);
+    }
 }
