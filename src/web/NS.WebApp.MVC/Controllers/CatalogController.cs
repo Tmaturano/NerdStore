@@ -5,9 +5,9 @@ namespace NS.WebApp.MVC.Controllers;
 
 public class CatalogController : MainController
 {
-    private readonly ICatalogServiceRefit _catalogService;
+    private readonly ICatalogService _catalogService;
 
-    public CatalogController(ICatalogServiceRefit catalogService) => _catalogService = catalogService;
+    public CatalogController(ICatalogService catalogService) => _catalogService = catalogService;
 
     [HttpGet]
     [Route("")]

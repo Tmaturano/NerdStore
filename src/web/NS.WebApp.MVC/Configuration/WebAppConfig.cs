@@ -22,7 +22,9 @@ public static class WebAppConfig
     {
         if (app.Environment.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/error/500");
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
         }
         else
         {

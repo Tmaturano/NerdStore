@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NS.WebApp.MVC.Models;
-using System.Diagnostics;
 
 namespace NS.WebApp.MVC.Controllers
 {
