@@ -1,4 +1,6 @@
-﻿using NS.WebApp.MVC.Extensions;
+﻿using Microsoft.AspNetCore.Localization;
+using NS.WebApp.MVC.Extensions;
+using System.Globalization;
 
 namespace NS.WebApp.MVC.Configuration;
 
@@ -14,7 +16,7 @@ public static class WebAppConfig
         if (app.Environment.IsDevelopment())
             app.Configuration.AddUserSecrets<Program>();
 
-        app.Services.AddControllersWithViews();        
+        app.Services.AddControllersWithViews();
         app.Services.Configure<AppSettings>(app.Configuration);
     }
 
@@ -39,6 +41,14 @@ public static class WebAppConfig
         app.UseRouting();
 
         app.UseIdentityConfiguration();
+
+        var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("pt-BR") };
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture("en-US"),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        });
 
         app.UseMiddleware<ExceptionMiddleware>();
 
