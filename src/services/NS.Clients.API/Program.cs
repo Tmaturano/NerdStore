@@ -1,25 +1,22 @@
+using NS.Clients.API.Configuration;
+using NS.WebApi.Core.Identity;
+
+#region Configure Services
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddSwaggerConfiguration();
+builder.AddApiConfiguration();
+builder.AddJwtConfiguration();
+builder.Services.RegisterServices();
 
 var app = builder.Build();
+#endregion
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+#region Configure Pipeline
+app.UseSwaggerConfiguration();
+app.UseApiConfiguration();
 
 app.MapControllers();
 
 app.Run();
+
+#endregion

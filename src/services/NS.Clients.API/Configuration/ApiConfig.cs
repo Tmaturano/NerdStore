@@ -1,4 +1,8 @@
-﻿namespace NS.Clients.API.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using NS.Clients.API.Data;
+using NS.WebApi.Core.Identity;
+
+namespace NS.Clients.API.Configuration;
 
 public static class ApiConfig
 {
@@ -12,8 +16,8 @@ public static class ApiConfig
         if (builder.Environment.IsDevelopment())
             builder.Configuration.AddUserSecrets<Program>();
 
-        //builder.Services.AddDbContext<CatalogContext>(options =>
-        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbContext<ClientContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddControllers();
 
@@ -37,7 +41,7 @@ public static class ApiConfig
         app.UseRouting();
         app.UseCors();
 
-        //app.UseAuthConfiguration();
+        app.UseAuthConfiguration();
 
         return app;
     }
