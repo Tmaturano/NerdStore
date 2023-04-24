@@ -15,7 +15,7 @@ public class ClientCommandHandler : CommandHandler, IRequestHandler<AddClientCom
     {
         if (!message.IsValid()) return message.ValidationResult;
 
-        var client = new Client(message.Id, message.Name, message.Email, message.CPF);
+        var client = new Client(message.Id, message.Name, message.Email, message.Cpf);
 
         var existingClient = await _clientRepository.GetByCPFASync(client.Cpf.Number);        
         if (existingClient is not null) 
