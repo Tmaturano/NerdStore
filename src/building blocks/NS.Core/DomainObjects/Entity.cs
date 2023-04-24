@@ -1,9 +1,31 @@
-﻿namespace NS.Core.DomainObjects;
+﻿using NS.Core.Messages;
+
+namespace NS.Core.DomainObjects;
 
 public abstract class Entity
 {
     public Guid Id { get; set; }
 
+    protected Entity() => Id = Guid.NewGuid();
+
+    private List<Event> _events;
+    public IReadOnlyCollection<Event> Notifications => _events?.AsReadOnly();
+
+    /// <summary>
+    /// Add and event in the memory so it can be sent later.
+    /// </summary>
+    /// <param name="newEvent"></param>
+    public void AddEvent(Event newEvent)
+    {
+        _events ??= new List<Event>();
+        _events.Add(newEvent);
+    }
+
+    public void RemoveEvent(Event eventItem) => _events?.Remove(eventItem);
+
+    public void ClearEvents() => _events?.Clear();
+
+    #region Overrides
     public override bool Equals(object? obj)
     {
         var compareTo = obj as Entity;
@@ -33,8 +55,8 @@ public abstract class Entity
     {
         if (ReferenceEquals(left, null) && ReferenceEquals(right, null)) return true;
 
-        if (ReferenceEquals(left, null) ||  ReferenceEquals(right, null)) return false; 
-        
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null)) return false;
+
         return left.Equals(right);
     }
 
@@ -42,4 +64,5 @@ public abstract class Entity
     {
         return !(left == right);
     }
+    #endregion
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using MediatR;
+using NS.Clients.API.Application.Events;
 using NS.Clients.API.Models;
 using NS.Core.Messages;
 
@@ -25,6 +26,9 @@ public class ClientCommandHandler : CommandHandler, IRequestHandler<AddClientCom
         }
 
         await _clientRepository.AddAsync(client);
+
+        client.AddEvent(new ClientAddedEvent(message.Id, message.Name, message.Email, message.Cpf));
+
         return await PersistData(_clientRepository.UnitOfWork);
     }
 }
