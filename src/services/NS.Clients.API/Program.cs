@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddSwaggerConfiguration();
 builder.AddApiConfiguration();
 builder.AddJwtConfiguration();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.RegisterServices();
 
 var app = builder.Build();
