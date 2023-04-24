@@ -28,8 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Events\" />
+    <Folder Include="Application\Queries\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Application\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
