@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NS.Catalog.API.Models;
+using NS.WebApi.Core.Controllers;
 using NS.WebApi.Core.Identity;
 
 namespace NS.Catalog.API.Controllers;
 
-[ApiController]
 [Route("api/catalog")]
 [Authorize]
-public class CatalogController : ControllerBase
+public class CatalogController : MainController
 {
     private readonly IProductRepository _productRepository;
 

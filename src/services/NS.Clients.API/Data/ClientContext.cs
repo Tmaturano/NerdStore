@@ -1,16 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using NS.Clients.API.Models;
 using NS.Core.Data;
 using NS.Core.DomainObjects;
 using NS.Core.Mediator;
+using NS.Core.Messages;
 
 namespace NS.Clients.API.Data;
 
-public class ClientContext : DbContext, IUnitOfWork
+public sealed class ClientContext : DbContext, IUnitOfWork
 {
     private readonly IMediatorHandler _mediatorHandler;
     public ClientContext(DbContextOptions<ClientContext> options, IMediatorHandler mediatorHandler) : base(options)
     {
+        _mediatorHandler = mediatorHandler;
+
         //This architecture does not depend of these features
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
@@ -21,6 +25,9 @@ public class ClientContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Ignore<ValidationResult>();
+        modelBuilder.Ignore<Event>();
+
         foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(
             e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
             property.SetColumnType("varchar(100)");

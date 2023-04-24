@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NS.Identity.API.Models;
+using NS.WebApi.Core.Controllers;
 using NS.WebApi.Core.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -30,7 +31,7 @@ namespace NS.Identity.API.Controllers
         [HttpPost("new-account")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Register(UserRegister newUser)
+        public async Task<IActionResult> Register(UserRegister newUser)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
@@ -53,7 +54,7 @@ namespace NS.Identity.API.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Login(UserLogin login)
+        public async Task<IActionResult> Login(UserLogin login)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
