@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using NS.WebApp.MVC.Extensions;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace NS.WebApp.MVC.Models;
@@ -10,7 +11,8 @@ public class UserRegister
     public string Name { get; set; }
 
     [Required]
-    [DisplayName("CPF")]    
+    [DisplayName("CPF")]
+    [Cpf]
     public string Cpf { get; set; }
 
     [Required]
@@ -22,6 +24,7 @@ public class UserRegister
     public string Password { get; set; }
 
     [Compare("Password")]
+    [Display(Name = "Confirm your Password")]
     public string ConfirmPassword { get; set; }
 }
 

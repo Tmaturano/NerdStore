@@ -16,4 +16,8 @@
     <PackageReference Include="Refit" Version="6.3.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\building blocks\NS.Core\NS.Core.csproj" />
+  </ItemGroup>
+
 </Project>

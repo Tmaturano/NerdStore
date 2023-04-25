@@ -1,4 +1,5 @@
-﻿using NS.WebApp.MVC.Extensions;
+﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NS.WebApp.MVC.Extensions;
 using NS.WebApp.MVC.Services;
 using NS.WebApp.MVC.Services.Handlers;
 using Polly;
@@ -11,6 +12,8 @@ public static class DependencyInjectionConfig
 {
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<IValidationAttributeAdapterProvider, ValidationAttributeAdapterProvider>();
+
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
                 
         services.AddHttpClient<IAuthenticationService, AuthenticationService>();
