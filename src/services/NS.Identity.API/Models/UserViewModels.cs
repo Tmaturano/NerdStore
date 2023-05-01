@@ -5,6 +5,12 @@ namespace NS.Identity.API.Models;
 public class UserRegister
 {
     [Required]
+    public string Name { get; set; }
+
+    [Required]
+    public string Cpf { get; set; }
+
+    [Required]
     [EmailAddress]
     public string Email { get; set; }
 
