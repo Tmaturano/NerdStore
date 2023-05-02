@@ -24,7 +24,7 @@ public class AddClientIntegrationHandler : BackgroundService
         _bus = RabbitHutch.CreateBus("host=localhost:5672");
 
         _bus.Rpc.RespondAsync<UserAddedIntegrationEvent, ResponseMessage>(async request =>
-            new ResponseMessage(await CreateClient(request)));
+            new ResponseMessage(await CreateClient(request)), cancellationToken: stoppingToken);
 
         return Task.CompletedTask;
     }
