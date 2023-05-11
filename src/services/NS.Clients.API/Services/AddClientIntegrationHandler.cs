@@ -1,8 +1,8 @@
-﻿using EasyNetQ;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using NS.Clients.API.Application.Commands;
 using NS.Core.Mediator;
 using NS.Core.Messages.Integration;
+using NS.MessageBus;
 
 namespace NS.Clients.API.Services;
 
@@ -11,25 +11,24 @@ namespace NS.Clients.API.Services;
 /// </summary>
 public class AddClientIntegrationHandler : BackgroundService
 {
-    private IBus _bus;
+    private readonly IMessageBus _bus;
     private readonly IServiceProvider _serviceProvider;
 
-    public AddClientIntegrationHandler(IServiceProvider serviceProvider)
+    public AddClientIntegrationHandler(IServiceProvider serviceProvider, IMessageBus bus)
     {
         _serviceProvider = serviceProvider;
+        _bus = bus;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _bus = RabbitHutch.CreateBus("host=localhost:5672");
-
-        _bus.Rpc.RespondAsync<UserAddedIntegrationEvent, ResponseMessage>(async request =>
-            new ResponseMessage(await CreateClient(request)), cancellationToken: stoppingToken);
+        _bus.RespondAsync<UserAddedIntegrationEvent, ResponseMessage>(async request =>
+           await CreateClient(request));
 
         return Task.CompletedTask;
     }
-        
-    private async Task<ValidationResult> CreateClient(UserAddedIntegrationEvent message)
+
+    private async Task<ResponseMessage> CreateClient(UserAddedIntegrationEvent message)
     {
         var clientCommand = new AddClientCommand(message.Id, message.Name, message.Email, message.Cpf);
         ValidationResult result;
@@ -41,6 +40,6 @@ public class AddClientIntegrationHandler : BackgroundService
             result = await mediator.SendCommand(clientCommand);
         }
 
-        return result;
+        return new ResponseMessage(result);
     }
 }

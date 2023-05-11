@@ -1,10 +1,10 @@
-﻿using EasyNetQ;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NS.Core.Messages.Integration;
 using NS.Identity.API.Models;
+using NS.MessageBus;
 using NS.WebApi.Core.Controllers;
 using NS.WebApi.Core.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,16 +20,18 @@ namespace NS.Identity.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
 
-        private IBus _bus;
+        private readonly IMessageBus _bus;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _bus = bus;
         }
 
         [HttpPost("new-account")]
@@ -49,7 +51,12 @@ namespace NS.Identity.API.Controllers
             var result = await _userManager.CreateAsync(user, newUser.Password);
             if (result.Succeeded)
             {
-                var success = await RegisterClient(newUser);
+                var clientResult = await RegisterClient(newUser);
+                if (!clientResult.ValidationResult.IsValid)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return CustomResponse(clientResult.ValidationResult);
+                }
 
                 return CustomResponse(await GenerateJWT(newUser.Email));
             }
@@ -57,16 +64,6 @@ namespace NS.Identity.API.Controllers
             AddProcessingErrors(result.Errors.Select(e => e.Description));
 
             return CustomResponse();
-        }
-
-        private async Task<ResponseMessage> RegisterClient(UserRegister newUser)
-        {
-            var user = await _userManager.FindByEmailAsync(newUser.Email);
-            var userRegistered = new UserAddedIntegrationEvent(Guid.Parse(user.Id), newUser.Name, newUser.Email, newUser.Cpf);
-
-            _bus = RabbitHutch.CreateBus("host=localhost:5672");
-
-            return await _bus.Rpc.RequestAsync<UserAddedIntegrationEvent, ResponseMessage>(userRegistered);
         }
 
         [HttpPost("login")]
@@ -158,5 +155,21 @@ namespace NS.Identity.API.Controllers
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private async Task<ResponseMessage> RegisterClient(UserRegister newUser)
+        {
+            var user = await _userManager.FindByEmailAsync(newUser.Email);
+            var userRegistered = new UserAddedIntegrationEvent(Guid.Parse(user.Id), newUser.Name, newUser.Email, newUser.Cpf);
+
+            try
+            {
+                return await _bus.RequestAsync<UserAddedIntegrationEvent, ResponseMessage>(userRegistered);
+            }
+            catch
+            {
+                await _userManager.DeleteAsync(user);
+                throw;
+            }
+        }
     }
 }
