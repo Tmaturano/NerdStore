@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddSwaggerConfiguration();
 builder.AddApiConfiguration();
 builder.AddIdentityConfiguration();
+builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 #endregion

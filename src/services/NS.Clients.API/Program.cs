@@ -9,6 +9,7 @@ builder.AddApiConfiguration();
 builder.AddJwtConfiguration();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.RegisterServices();
+builder.Services.AddMessageBusConfiguration(builder.Configuration);
 
 var app = builder.Build();
 #endregion
