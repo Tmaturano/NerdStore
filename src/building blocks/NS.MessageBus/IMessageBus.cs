@@ -1,6 +1,5 @@
 ﻿using EasyNetQ;
 using EasyNetQ.Internals;
-using MediatR;
 using NS.Core.Messages.Integration;
 
 namespace NS.MessageBus;

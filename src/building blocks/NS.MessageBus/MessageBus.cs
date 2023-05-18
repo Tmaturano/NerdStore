@@ -88,7 +88,7 @@ public class MessageBus : IMessageBus
             .Or<BrokerUnreachableException>()
             .WaitAndRetry(3, retryAttempt =>
                 TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-
+                
         policy.Execute(() =>
         {
             _bus = RabbitHutch.CreateBus(_connectionString);
@@ -97,6 +97,7 @@ public class MessageBus : IMessageBus
         });
     }
 
+    //more resiliency to the application. If the rabbitMq service stops, then OnDisconnect handler will be fired to try to reconnect forever
     private void OnDisconnect(object s, EventArgs e)
     {
         var policy = Policy.Handle<EasyNetQException>()

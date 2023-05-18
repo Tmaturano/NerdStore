@@ -20,13 +20,23 @@ public class AddClientIntegrationHandler : BackgroundService
         _bus = bus;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    private void SetResponder()
     {
         _bus.RespondAsync<UserAddedIntegrationEvent, ResponseMessage>(async request =>
-           await CreateClient(request));
+            await CreateClient(request));
 
+        _bus.AdvancedBus.Connected += OnConnect;
+    }
+
+    //This is called only once, when the application starts
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        SetResponder();
         return Task.CompletedTask;
     }
+
+    //When the application get the rabbitMq connection back, this event will be fired, like renewing this subscription
+    private void OnConnect(object s, EventArgs e) => SetResponder();
 
     private async Task<ResponseMessage> CreateClient(UserAddedIntegrationEvent message)
     {
