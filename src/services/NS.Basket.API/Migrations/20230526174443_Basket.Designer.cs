@@ -11,7 +11,7 @@ using NS.Basket.API.Data;
 
 namespace NS.Basket.API.Migrations
 {
-    [DbContext(typeof(CartContext))]
+    [DbContext(typeof(BasketContext))]
     [Migration("20230526174443_Basket")]
     partial class Basket
     {

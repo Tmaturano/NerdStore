@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
-namespace NS.WebApp.MVC.Extensions;
+namespace NS.WebApi.Core.User;
 
-public class AspNetUser : IUser
+public class AspNetUser : IAspNetUser
 {
     private readonly IHttpContextAccessor _contextAccessor;
 
@@ -25,29 +26,4 @@ public class AspNetUser : IUser
     public bool IsAuthenticated() => _contextAccessor.HttpContext.User.Identity.IsAuthenticated;    
 }
 
-public static class ClaimsPrincipalExtensions
-{
-    public static string GetUserId(this ClaimsPrincipal principal)
-    {
-        if (principal is null) throw new ArgumentException(nameof(principal));
 
-        var claim = principal.FindFirst("sub");
-        return claim?.Value;
-    }
-
-    public static string GetUserEmail(this ClaimsPrincipal principal)
-    {
-        if (principal is null) throw new ArgumentException(nameof(principal));
-
-        var claim = principal.FindFirst("email");
-        return claim?.Value;
-    }
-
-    public static string GetUserToken(this ClaimsPrincipal principal)
-    {
-        if (principal is null) throw new ArgumentException(nameof(principal));
-
-        var claim = principal.FindFirst("JWT");
-        return claim?.Value;
-    }
-}

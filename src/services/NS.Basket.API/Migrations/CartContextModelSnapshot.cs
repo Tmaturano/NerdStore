@@ -10,7 +10,7 @@ using NS.Basket.API.Data;
 
 namespace NS.Basket.API.Migrations
 {
-    [DbContext(typeof(CartContext))]
+    [DbContext(typeof(BasketContext))]
     partial class CartContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

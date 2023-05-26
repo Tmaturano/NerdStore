@@ -16,7 +16,7 @@ public static class ApiConfig
         if (builder.Environment.IsDevelopment())
             builder.Configuration.AddUserSecrets<Program>();
 
-        builder.Services.AddDbContext<CartContext>(options =>
+        builder.Services.AddDbContext<BasketContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddControllers();

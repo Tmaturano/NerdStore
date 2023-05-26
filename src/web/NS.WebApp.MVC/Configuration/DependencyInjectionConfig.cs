@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NS.WebApi.Core.User;
 using NS.WebApp.MVC.Extensions;
 using NS.WebApp.MVC.Services;
 using NS.WebApp.MVC.Services.Handlers;
@@ -33,7 +34,7 @@ public static class DependencyInjectionConfig
         //  .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<IUser, AspNetUser>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
 
     }
 

@@ -4,9 +4,9 @@ using NS.Core.Data;
 
 namespace NS.Basket.API.Data;
 
-public class CartContext : DbContext, IUnitOfWork
+public class BasketContext : DbContext, IUnitOfWork
 {
-    public CartContext(DbContextOptions<CartContext> options) : base(options)
+    public BasketContext(DbContextOptions<BasketContext> options) : base(options)
     {
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
