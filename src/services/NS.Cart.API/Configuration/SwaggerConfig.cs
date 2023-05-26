@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace NS.Cart.API.Configuration;
+namespace NS.Basket.API.Configuration;
 
 public static class SwaggerConfig
 {

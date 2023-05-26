@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NS.WebApi.Core.Controllers;
 
-namespace NS.Cart.API.Controllers
+namespace NS.Basket.API.Controllers
 {
     [Route("api/cart")]
     [Authorize]

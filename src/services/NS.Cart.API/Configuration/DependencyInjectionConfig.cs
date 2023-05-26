@@ -1,4 +1,4 @@
-﻿namespace NS.Cart.API.Configuration;
+﻿namespace NS.Basket.API.Configuration;
 
 public static class DependencyInjectionConfig
 {

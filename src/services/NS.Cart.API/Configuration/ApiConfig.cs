@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NS.Catalog.API.Data;
+using NS.Basket.API.Data;
 using NS.WebApi.Core.Identity;
 
-namespace NS.Cart.API.Configuration;
+namespace NS.Basket.API.Configuration;
 
 public static class ApiConfig
 {

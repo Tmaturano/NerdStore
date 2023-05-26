@@ -1,4 +1,4 @@
-using NS.Cart.API.Configuration;
+using NS.Basket.API.Configuration;
 using NS.WebApi.Core.Identity;
 
 #region Configure Services

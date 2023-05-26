@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/services/NS.Cart.API/NS.Cart.API.csproj", "src/services/NS.Cart.API/"]
-RUN dotnet restore "src/services/NS.Cart.API/NS.Cart.API.csproj"
+COPY ["src/services/NS.Basket.API/NS.Basket.API.csproj", "src/services/NS.Basket.API/"]
+RUN dotnet restore "src/services/NS.Basket.API/NS.Basket.API.csproj"
 COPY . .
-WORKDIR "/src/src/services/NS.Cart.API"
-RUN dotnet build "NS.Cart.API.csproj" -c Release -o /app/build
+WORKDIR "/src/src/services/NS.Basket.API"
+RUN dotnet build "NS.Basket.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NS.Cart.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "NS.Basket.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "NS.Cart.API.dll"]
+ENTRYPOINT ["dotnet", "NS.Basket.API.dll"]

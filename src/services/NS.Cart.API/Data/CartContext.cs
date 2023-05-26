@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NS.Core.Data;
 using NS.Core.Messages;
 
-namespace NS.Catalog.API.Data;
+namespace NS.Basket.API.Data;
 
 public class CartContext : DbContext, IUnitOfWork
 {

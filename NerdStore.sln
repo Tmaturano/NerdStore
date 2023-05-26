@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NS.MessageBus", "src\buildi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart", "Cart", "{BF7B7D8F-153C-46EC-B301-D76D237FBAA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NS.Cart.API", "src\services\NS.Cart.API\NS.Cart.API.csproj", "{E0A5A454-7B02-4C28-976D-BD1B6A38CD21}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NS.Basket.API", "src\services\NS.Cart.API\NS.Basket.API.csproj", "{E0A5A454-7B02-4C28-976D-BD1B6A38CD21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
