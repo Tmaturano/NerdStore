@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using NS.Basket.API.Models;
 using NS.Core.Data;
 
@@ -13,14 +14,15 @@ public class BasketContext : DbContext, IUnitOfWork
     }
 
     public DbSet<BasketClient> BasketClients { get; set; }
-    public DbSet<BasketItem> BasketItems{ get; set; }
+    public DbSet<BasketItem> BasketItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(
             e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
             property.SetColumnType("varchar(100)");
+
+        modelBuilder.Ignore<ValidationResult>();
 
         modelBuilder.Entity<BasketClient>()
             .HasIndex(c => c.ClientId)

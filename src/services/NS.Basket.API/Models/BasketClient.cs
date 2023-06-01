@@ -29,8 +29,6 @@ public class BasketClient
 
     internal void AddItem(BasketItem item)
     {
-        if (!item.IsValid()) return;
-
         item.AssociateBasket(item.BasketId);
 
         if (BasketItemExists(item))

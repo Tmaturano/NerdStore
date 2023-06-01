@@ -141,7 +141,7 @@ namespace NS.Basket.API.Controllers
         {
             if (basket.IsValid()) return;
 
-            basket.ValidationResult.Errors.ToList().ForEach(e => AddProcessingError(e.ErrorMessage));
+            AddProcessingErrors(basket.ValidationResult.Errors.Select(e => e.ErrorMessage));
         }
     }
 }
