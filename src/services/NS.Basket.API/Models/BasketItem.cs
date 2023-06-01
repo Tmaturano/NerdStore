@@ -1,4 +1,6 @@
-﻿namespace NS.Basket.API.Models;
+﻿using FluentValidation;
+
+namespace NS.Basket.API.Models;
 
 public class BasketItem
 {
@@ -14,4 +16,37 @@ public class BasketItem
     public Guid BasketId { get; set; }
 
     public BasketClient BasketClient { get; set; }
+
+    internal void AssociateBasket(Guid basketId) => BasketId = basketId;
+
+    internal decimal CalculatePrice() => Quantity * Price;
+
+    internal void AddUnits(int units) => Quantity += units;
+
+    internal void UpdateUnits(int units) => Quantity = units; 
+
+    internal bool IsValid() => new BasketItemValidation().Validate(this).IsValid;
+
+    public class BasketItemValidation : AbstractValidator<BasketItem>
+    {
+        public BasketItemValidation()
+        {
+            RuleFor(c => c.ProductId)
+                .NotEqual(Guid.Empty)
+                .WithMessage("Invalid product Id");
+
+
+            RuleFor(c => c.Quantity)
+                .GreaterThan(0)
+                .WithMessage(item => $"The minimum quantity for {item.Name} is 1");
+
+            RuleFor(c => c.Quantity)
+                .LessThanOrEqualTo(BasketClient.MAX_QUANTITY_ITEM)
+                .WithMessage(item => $"The maximum quantity of {item.Name} is {BasketClient.MAX_QUANTITY_ITEM}");
+
+            RuleFor(c => c.Price)
+                .GreaterThan(0)
+                .WithMessage(item => $"The price of {item.Name} must be greater than 0");
+        }
+    }
 }
