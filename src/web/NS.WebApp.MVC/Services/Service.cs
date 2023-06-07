@@ -1,4 +1,5 @@
 ﻿using NS.WebApp.MVC.Extensions;
+using NS.WebApp.MVC.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -34,4 +35,6 @@ public abstract class Service
         response.EnsureSuccessStatusCode();
         return true;
     }
+
+    protected ResponseResult OkReturn() => new ResponseResult();
 }

@@ -14,10 +14,16 @@ public static class DependencyInjectionConfig
     public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IValidationAttributeAdapterProvider, ValidationAttributeAdapterProvider>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
 
+        #region HttpServices
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-                
-        services.AddHttpClient<IAuthenticationService, AuthenticationService>();
+
+        services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(PollyExtensions.WaitAndRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddHttpClient<ICatalogService, CatalogService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
@@ -33,9 +39,12 @@ public static class DependencyInjectionConfig
         //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
         //  .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<IAspNetUser, AspNetUser>();
+        services.AddHttpClient<IBasketService, BasketService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(PollyExtensions.WaitAndRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
+        #endregion
     }
 
     public class PollyExtensions

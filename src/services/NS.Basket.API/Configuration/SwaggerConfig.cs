@@ -11,8 +11,8 @@ public static class SwaggerConfig
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "NerdStore Cart API",
-                Description = "API to handle the shopping cart",
+                Title = "NerdStore Basket API",
+                Description = "API to handle the shopping basket",
                 Contact = new OpenApiContact { Name = "Thiago Maturana", Email = "thiago@test.com" },
                 License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             });

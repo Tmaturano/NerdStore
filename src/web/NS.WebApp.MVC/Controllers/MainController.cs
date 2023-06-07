@@ -17,4 +17,9 @@ public class MainController : Controller
 
         return false;
     }
+
+
+    protected void AddValidationError(string message) => ModelState.AddModelError(string.Empty, message);
+
+    protected bool IsOperationValid() => ModelState.ErrorCount == 0;
 }

@@ -5,17 +5,13 @@ namespace NS.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [HttpGet()]
+        public IActionResult Index() => View();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        [HttpGet("privacy")]
+        public IActionResult Privacy() => View();
 
-        [Route("system-offline")]
+        [HttpGet("system-offline")]
         public IActionResult SystemOffline()
         {
             var modelError = new ErrorViewModel
@@ -27,8 +23,8 @@ namespace NS.WebApp.MVC.Controllers
 
             return View("Error", modelError);
         }
-
-        [Route("error/{id:length(3,3)}")]
+                
+        [HttpGet("error/{id:length(3,3)}")]
         public IActionResult Error(int id)
         {
             var modelError = new ErrorViewModel();
