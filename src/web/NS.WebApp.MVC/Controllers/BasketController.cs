@@ -17,10 +17,12 @@ public class BasketController : MainController
         _catalogService = catalogService;
     }
 
-    [HttpGet("basket")]
+    [Route("basket")]
+    [HttpGet]
     public async Task<IActionResult> Index() => View(await _basketService.GetBasketAsync());
 
-    [HttpPost("basket/add-item")]
+    [HttpPost]
+    [Route("basket/add-item")]
     public async Task<IActionResult> AddItemBasket(ProductItemViewModel productItem)
     {
         var product = await _catalogService.GetByIdAsync(productItem.ProductId);
@@ -39,7 +41,8 @@ public class BasketController : MainController
         return RedirectToAction("Index");
     }
 
-    [HttpPost("basket/update-item")]
+    [HttpPost]
+    [Route("basket/update-item")]
     public async Task<IActionResult> UpdateItemBasket(Guid productId, int quantity)
     {
         var product = await _catalogService.GetByIdAsync(productId);
@@ -55,7 +58,8 @@ public class BasketController : MainController
         return RedirectToAction("Index");
     }
 
-    [HttpPost("basket/remove-item")]
+    [HttpPost]
+    [Route("basket/remove-item")]
     public async Task<IActionResult> RemoveItemBasket(Guid productId)
     {
         var product = await _catalogService.GetByIdAsync(productId);

@@ -21,11 +21,11 @@ public class BasketController : MainController
         _context = context;
     }
 
-    [HttpGet("basket")]
+    [HttpGet]
     public async Task<BasketClient> Get() => await GetBasketClientAsync() ?? new BasketClient();
 
-    [HttpPost("basket")]
-    public async Task<IActionResult> Post(BasketItem item)
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] BasketItem item)
     {
         var basket = await GetBasketClientAsync();
 
@@ -41,8 +41,8 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpPut("basket/{productId}")]
-    public async Task<IActionResult> Put(Guid productId, BasketItem item)
+    [HttpPut("{productId}")]
+    public async Task<IActionResult> Put(Guid productId, [FromBody] BasketItem item)
     {
         var basket = await GetBasketClientAsync();
         var basketItem = await GetBasketItemValidatedAsync(productId, basket, item);
@@ -60,7 +60,7 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpDelete("basket/{productId}")]
+    [HttpDelete("{productId}")]
     public async Task<IActionResult> Delete(Guid productId)
     {            
         var basket = await GetBasketClientAsync();
@@ -92,6 +92,7 @@ public class BasketController : MainController
         var basket = new BasketClient(_user.GetId());
         basket.AddItem(item);
 
+        ValidateBasket(basket);
         _context.BasketClients.Add(basket);
     }
     private void HandleExistingBasket(BasketClient basket, BasketItem item)

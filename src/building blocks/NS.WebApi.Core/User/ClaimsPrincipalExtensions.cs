@@ -8,7 +8,7 @@ public static class ClaimsPrincipalExtensions
     {
         if (principal is null) throw new ArgumentException(nameof(principal));
 
-        var claim = principal.FindFirst("sub");
+        var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
         return claim?.Value;
     }
 

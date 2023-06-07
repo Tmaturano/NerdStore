@@ -18,7 +18,7 @@ public class BasketService : Service, IBasketService
     {
         var itemContent = GetContent(product);
 
-        var response = await _httpClient.PostAsync("/basket/", itemContent);
+        var response = await _httpClient.PostAsync("/api/basket/", itemContent);
 
         if (!HandleErrorsResponse(response)) return await DeserializeResponseObject<ResponseResult>(response);
 
@@ -27,7 +27,7 @@ public class BasketService : Service, IBasketService
 
     public async Task<BasketViewModel> GetBasketAsync()
     {
-        var response = await _httpClient.GetAsync("/basket/");
+        var response = await _httpClient.GetAsync("/api/basket/");
 
         HandleErrorsResponse(response);
 
@@ -36,7 +36,7 @@ public class BasketService : Service, IBasketService
 
     public async Task<ResponseResult> RemoveItemBasketAsync(Guid productId)
     {
-        var response = await _httpClient.DeleteAsync($"/basket/{productId}");
+        var response = await _httpClient.DeleteAsync($"/api/basket/{productId}");
 
         if (!HandleErrorsResponse(response)) return await DeserializeResponseObject<ResponseResult>(response);
 
@@ -47,7 +47,7 @@ public class BasketService : Service, IBasketService
     {
         var itemContent = GetContent(product);
 
-        var response = await _httpClient.PutAsync($"/basket/{product.ProductId}", itemContent);
+        var response = await _httpClient.PutAsync($"/api/basket/{product.ProductId}", itemContent);
 
         if (!HandleErrorsResponse(response)) return await DeserializeResponseObject<ResponseResult>(response);
 

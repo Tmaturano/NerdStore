@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace NS.Basket.API.Models;
 
@@ -15,6 +16,7 @@ public class BasketItem
 
     public Guid BasketId { get; set; }
 
+    [JsonIgnore]
     public BasketClient BasketClient { get; set; }
 
     internal void AssociateBasket(Guid basketId) => BasketId = basketId;
@@ -35,7 +37,9 @@ public class BasketItem
                 .NotEqual(Guid.Empty)
                 .WithMessage("Invalid product Id");
 
-
+            RuleFor(c => c.Name)
+                .NotEmpty();
+            
             RuleFor(c => c.Quantity)
                 .GreaterThan(0)
                 .WithMessage(item => $"The minimum quantity for {item.Name} is 1");
