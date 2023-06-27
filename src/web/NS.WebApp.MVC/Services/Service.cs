@@ -1,5 +1,5 @@
-﻿using NS.WebApp.MVC.Extensions;
-using NS.WebApp.MVC.Models;
+﻿using NS.Core.Communication;
+using NS.WebApp.MVC.Extensions;
 using System.Text;
 using System.Text.Json;
 

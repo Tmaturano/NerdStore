@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using NS.Core.Communication;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 
@@ -31,5 +32,7 @@ namespace NS.Bff.Shopping.Services
             response.EnsureSuccessStatusCode();
             return true;
         }
+
+        protected ResponseResult OkReturn() => new ResponseResult();
     }
 }

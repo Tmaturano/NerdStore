@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using NS.Core.Communication;
 using NS.WebApp.MVC.Extensions;
 using NS.WebApp.MVC.Models;
 

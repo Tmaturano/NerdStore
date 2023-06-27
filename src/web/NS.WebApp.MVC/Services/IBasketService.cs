@@ -1,4 +1,5 @@
-﻿using NS.WebApp.MVC.Models;
+﻿using NS.Core.Communication;
+using NS.WebApp.MVC.Models;
 
 namespace NS.WebApp.MVC.Services;
 

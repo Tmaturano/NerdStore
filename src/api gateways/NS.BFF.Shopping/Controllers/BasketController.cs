@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NS.Bff.Shopping.Services;
 using NS.WebApi.Core.Controllers;
+using NSE.Bff.Compras.Services;
 
 namespace NS.Bff.Shopping.Controllers
 {
@@ -8,13 +10,22 @@ namespace NS.Bff.Shopping.Controllers
     [Authorize]
     public class BasketController : MainController
     {
+        private readonly IBasketService _basketService;
+        private readonly ICatalogService _catalogService;
+
+        public BasketController(IBasketService basketService, ICatalogService catalogService)
+        {
+            _basketService = basketService;
+            _catalogService = catalogService;
+        }
+
         [HttpGet("basket")]        
         public async Task<IActionResult> Index()
         {
             return CustomResponse();
         }
 
-        [HttpGet("basket/basket-count")]        
+        [HttpGet("basket/count")]        
         public async Task<IActionResult> GetBasketCount()
         {
             return CustomResponse();

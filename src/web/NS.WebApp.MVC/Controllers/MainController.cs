@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NS.Core.Communication;
 using NS.WebApp.MVC.Models;
 
 namespace NS.WebApp.MVC.Controllers;
