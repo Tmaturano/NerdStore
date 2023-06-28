@@ -28,7 +28,7 @@ public class ExceptionMiddleware
         {
             HandleRequestExceptionAsync(context, ex.StatusCode);
         }
-        catch (BrokenCircuitException)
+        catch (BrokenCircuitException ex)
         {
             HandleCircuitBreakerExceptionAsync(context);
         }

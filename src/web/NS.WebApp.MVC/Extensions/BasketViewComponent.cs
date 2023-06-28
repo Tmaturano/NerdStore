@@ -6,12 +6,12 @@ namespace NS.WebApp.MVC.Extensions;
 
 public class BasketViewComponent : ViewComponent
 {
-    private readonly IBasketService _basketService;
+    private readonly IShoppingBffService _basketService;
 
-    public BasketViewComponent(IBasketService basketService) => _basketService = basketService;
+    public BasketViewComponent(IShoppingBffService basketService) => _basketService = basketService;
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        return View(await _basketService.GetBasketAsync() ?? new BasketViewModel());
+        return View(await _basketService.GetBasketCountAsync());
     }
 }

@@ -39,7 +39,7 @@ public static class DependencyInjectionConfig
         //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
         //  .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
 
-        services.AddHttpClient<IBasketService, BasketService>()
+        services.AddHttpClient<IShoppingBffService, ShoppingBffService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(PollyExtensions.WaitAndRetry())
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));

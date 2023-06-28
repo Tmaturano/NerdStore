@@ -3,10 +3,10 @@
 public class BasketViewModel
 {
     public decimal TotalPrice { get; set; }
-    public List<ProductItemViewModel> Items { get; set; } = new List<ProductItemViewModel>();
+    public List<BasketItemViewModel> Items { get; set; } = new List<BasketItemViewModel>();
 }
 
-public class ProductItemViewModel
+public class BasketItemViewModel
 {
     public Guid ProductId { get; set; }
     public string Name { get; set; }
