@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NS.Core.Communication;
 
 namespace NS.WebApi.Core.Controllers;
 
@@ -33,6 +34,23 @@ public abstract class MainController : ControllerBase
         AddProcessingErrors(validationResult.Errors.Select(x => x.ErrorMessage));
 
         return CustomResponse();
+    }
+
+    protected IActionResult CustomResponse(ResponseResult response)
+    {
+        ResponseHasErrors(response);
+
+        return CustomResponse();
+    }
+
+    protected bool ResponseHasErrors(ResponseResult response)
+    {
+        if (response is null || response.Errors.Messages.Any()) return false;
+
+        foreach (var error in response.Errors.Messages)
+            AddProcessingError(error);
+
+        return true;
     }
 
     protected bool IsOperationValid() => !Errors.Any();

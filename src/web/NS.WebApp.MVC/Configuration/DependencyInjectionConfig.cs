@@ -47,7 +47,7 @@ public static class DependencyInjectionConfig
         #endregion
     }
 
-    public class PollyExtensions
+    public static class PollyExtensions
     {
         public static AsyncRetryPolicy<HttpResponseMessage> WaitAndRetry()
         {
