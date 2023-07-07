@@ -1,9 +1,8 @@
-﻿using NS.Bff.Shopping.Services;
-using NS.BFF.Shopping.Extensions;
+﻿using NS.BFF.Shopping.Extensions;
+using NS.BFF.Shopping.Services;
 using NS.WebApi.Core.Extensions;
 using NS.WebApi.Core.User;
-using NSE.Bff.Compras.Services;
-using NSE.Bff.Shopping.Services;
+using NSE.BFF.Shopping.Services;
 using Polly;
 
 namespace NS.BFF.Shopping.Configuration;

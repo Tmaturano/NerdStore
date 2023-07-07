@@ -3,64 +3,75 @@ using NS.BFF.Shopping.Extensions;
 using NS.BFF.Shopping.Models;
 using NS.Core.Communication;
 
-namespace NS.Bff.Shopping.Services
+namespace NS.BFF.Shopping.Services;
+
+public interface IBasketService
 {
-    public interface IBasketService
+    Task<BasketDTO> GetBasketAsync();
+    Task<ResponseResult> AddItemBasketAsync(BasketItemDTO product);
+    Task<ResponseResult> UpdateItemBasketAsync(Guid productId, BasketItemDTO product);
+    Task<ResponseResult> RemoveItemBasketAsync(Guid productId);
+    Task<ResponseResult> ApplyVoucherBasketAsync(VoucherDTO voucher);
+}
+
+public class BasketService : Service, IBasketService
+{
+    private readonly HttpClient _httpClient;
+
+    public BasketService(HttpClient httpClient, IOptions<AppServicesSettings> settings)
     {
-        Task<BasketDTO> GetBasketAsync();
-        Task<ResponseResult> AddItemBasketAsync(BasketItemDTO product);
-        Task<ResponseResult> UpdateItemBasketAsync(Guid productId, BasketItemDTO product);
-        Task<ResponseResult> RemoveItemBasketAsync(Guid productId);
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(settings.Value.BasketUrl);
     }
 
-    public class BasketService : Service, IBasketService
+    public async Task<ResponseResult> AddItemBasketAsync(BasketItemDTO product)
     {
-        private readonly HttpClient _httpClient;
+        var itemContent = GetContent(product);
 
-        public BasketService(HttpClient httpClient, IOptions<AppServicesSettings> settings)
-        {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(settings.Value.BasketUrl);
-        }
+        var response = await _httpClient.PostAsync("/api/basket/", itemContent);
 
-        public async Task<ResponseResult> AddItemBasketAsync(BasketItemDTO product)
-        {
-            var itemContent = GetContent(product);
+        if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
 
-            var response = await _httpClient.PostAsync("/api/basket/", itemContent);
+        return OkReturn();
+    }
 
-            if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
+    public async Task<ResponseResult> ApplyVoucherBasketAsync(VoucherDTO voucher)
+    {
+        var itemContent = GetContent(voucher);
 
-            return OkReturn();
-        }
+        var response = await _httpClient.PostAsync("/api/basket/apply-voucher/", itemContent);
 
-        public async Task<BasketDTO> GetBasketAsync()
-        {
-            var response = await _httpClient.GetAsync("/api/basket/");
+        if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
 
-            HandleResponseErrors(response);
+        return OkReturn();
+    }
 
-            return await DeserializeObjectResponse<BasketDTO>(response);
-        }
+    public async Task<BasketDTO> GetBasketAsync()
+    {
+        var response = await _httpClient.GetAsync("/api/basket/");
 
-        public async Task<ResponseResult> RemoveItemBasketAsync(Guid productId)
-        {
-            var response = await _httpClient.DeleteAsync($"/api/basket/{productId}");
+        HandleResponseErrors(response);
 
-            if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
+        return await DeserializeObjectResponse<BasketDTO>(response);
+    }
 
-            return OkReturn();
-        }
+    public async Task<ResponseResult> RemoveItemBasketAsync(Guid productId)
+    {
+        var response = await _httpClient.DeleteAsync($"/api/basket/{productId}");
 
-        public async Task<ResponseResult> UpdateItemBasketAsync(Guid productId, BasketItemDTO product)
-        {
-            var itemContent = GetContent(product);
+        if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
 
-            var response = await _httpClient.PutAsync($"/api/basket/{product.ProductId}", itemContent);
+        return OkReturn();
+    }
 
-            if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
+    public async Task<ResponseResult> UpdateItemBasketAsync(Guid productId, BasketItemDTO product)
+    {
+        var itemContent = GetContent(product);
 
-            return OkReturn();
-        }
+        var response = await _httpClient.PutAsync($"/api/basket/{product.ProductId}", itemContent);
+
+        if (!HandleResponseErrors(response)) return await DeserializeObjectResponse<ResponseResult>(response);
+
+        return OkReturn();
     }
 }

@@ -1,32 +1,31 @@
 ﻿using Microsoft.Extensions.Options;
-using NS.Bff.Shopping.Services;
 using NS.BFF.Shopping.Extensions;
 using NS.BFF.Shopping.Models;
+using NS.BFF.Shopping.Services;
 
-namespace NSE.Bff.Shopping.Services
+namespace NSE.BFF.Shopping.Services;
+
+public interface ICatalogService
 {
-    public interface ICatalogService
+    Task<ProductItemDTO> GetById(Guid id);
+}
+
+public class CatalogService : Service, ICatalogService
+{
+    private readonly HttpClient _httpClient;
+
+    public CatalogService(HttpClient httpClient, IOptions<AppServicesSettings> settings)
     {
-        Task<ProductItemDTO> GetById(Guid id);
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(settings.Value.CatalogUrl);
     }
 
-    public class CatalogService : Service, ICatalogService
+    public async Task<ProductItemDTO> GetById(Guid id)
     {
-        private readonly HttpClient _httpClient;
+        var response = await _httpClient.GetAsync($"/api/catalog/products/{id}");
 
-        public CatalogService(HttpClient httpClient, IOptions<AppServicesSettings> settings)
-        {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(settings.Value.CatalogUrl);
-        }
+        HandleResponseErrors(response);
 
-        public async Task<ProductItemDTO> GetById(Guid id)
-        {
-            var response = await _httpClient.GetAsync($"/api/catalog/products/{id}");
-
-            HandleResponseErrors(response);
-
-            return await DeserializeObjectResponse<ProductItemDTO>(response);
-        }
+        return await DeserializeObjectResponse<ProductItemDTO>(response);
     }
 }

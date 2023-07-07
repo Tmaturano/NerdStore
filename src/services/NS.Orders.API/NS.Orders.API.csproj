@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\building blocks\NS.MessageBus\NS.MessageBus.csproj" />
     <ProjectReference Include="..\..\building blocks\NS.WebApi.Core\NS.WebApi.Core.csproj" />
     <ProjectReference Include="..\NS.Orders.Domain\NS.Orders.Domain.csproj" />
