@@ -29,6 +29,24 @@ public class BasketContext : DbContext, IUnitOfWork
             .HasDatabaseName("IDX_Client");
 
         modelBuilder.Entity<BasketClient>()
+            .Ignore(c => c.Voucher) //this property will not be a column in the table
+            .OwnsOne(c => c.Voucher, v =>
+            {
+                v.Property(vc => vc.Code)
+                    .HasColumnName("VoucherCode")
+                    .HasColumnType("varchar(50)");
+
+                v.Property(vc => vc.DiscountType)
+                    .HasColumnName("DiscountType");
+
+                v.Property(vc => vc.Percentage)
+                    .HasColumnName("Percentage");
+
+                v.Property(vc => vc.DiscountValue)
+                    .HasColumnName("DiscountValue");
+            });
+
+        modelBuilder.Entity<BasketClient>()
             .HasMany(c => c.Items)
             .WithOne(i => i.BasketClient)
             .HasForeignKey(c => c.BasketId);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NS.Basket.API.Data;
 
@@ -11,9 +12,11 @@ using NS.Basket.API.Data;
 namespace NS.Basket.API.Migrations
 {
     [DbContext(typeof(BasketContext))]
-    partial class CartContextModelSnapshot : ModelSnapshot
+    [Migration("20230707170351_Voucher")]
+    partial class Voucher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

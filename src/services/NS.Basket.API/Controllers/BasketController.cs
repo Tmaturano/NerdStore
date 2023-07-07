@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NS.Basket.API.Data;
+using NS.Basket.API.Model;
 using NS.Basket.API.Models;
 using NS.WebApi.Core.Controllers;
 using NS.WebApi.Core.User;
@@ -74,6 +75,19 @@ public class BasketController : MainController
         basket.RemoveItem(basketItem);
 
         _context.BasketItems.Remove(basketItem);
+        _context.BasketClients.Update(basket);
+
+        await CommitAsync();
+        return CustomResponse();
+    }
+
+    [HttpPost("apply-voucher")]    
+    public async Task<IActionResult> ApplyVoucher(Voucher voucher)
+    {
+        var basket = await GetBasketClientAsync();
+
+        basket.ApplyVoucher(voucher);
+
         _context.BasketClients.Update(basket);
 
         await CommitAsync();

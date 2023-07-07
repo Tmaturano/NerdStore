@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using NS.Basket.API.Model;
 
 namespace NS.Basket.API.Models;
 
@@ -13,6 +14,10 @@ public class BasketClient
     public List<BasketItem> Items { get; set; } = new List<BasketItem>();
     public ValidationResult ValidationResult { get; set; }
 
+    public bool VoucherAlreadyUsed { get; set; }
+    public decimal Discount { get; set; }
+    public Voucher Voucher { get; set; }
+
     public BasketClient(Guid clientId)
     {
         Id = Guid.NewGuid();
@@ -21,7 +26,46 @@ public class BasketClient
 
     public BasketClient() { }
 
-    private void CalculateBasketTotalPrice() => TotalPrice = Items.Sum(p => p.CalculatePrice());
+    internal void ApplyVoucher(Voucher voucher)
+    {
+        Voucher = voucher;
+        VoucherAlreadyUsed = true;
+        CalculateBasketTotalPrice();
+    }
+
+    private void CalculateDiscountTotalValue()
+    {
+        if (!VoucherAlreadyUsed) return;
+
+        decimal discount = 0;
+        var totalPrice = TotalPrice;
+
+        if (Voucher.DiscountType == VoucherDiscountType.Percentage)
+        {
+            if (Voucher.Percentage.HasValue)
+            {
+                discount = (totalPrice * Voucher.Percentage.Value) / 100;
+                totalPrice -= discount;
+            }
+        }
+        else
+        {
+            if (Voucher.DiscountValue.HasValue)
+            {
+                discount = Voucher.DiscountValue.Value;
+                totalPrice -= discount;
+            }
+        }
+
+        TotalPrice = totalPrice < 0 ? 0 : totalPrice;
+        Discount = discount;
+    }
+
+    private void CalculateBasketTotalPrice()
+    {
+        TotalPrice = Items.Sum(p => p.CalculatePrice());
+        CalculateDiscountTotalValue();
+    }
 
     internal bool BasketItemExists(BasketItem item) => Items.Any(p => p.ProductId == item.ProductId);
 
